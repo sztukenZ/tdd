@@ -1,13 +1,37 @@
+from typing import Union, Callable
+
 from item import Item
 from utils.colors import Bcolors
 
 
+def check_if_num_positive(num: str, num_type: Callable) -> Union[float, int]:
+    """
+    Checks if provided string input is a positive number
+    :param num: number as a string
+    :param num_type: int or float
+    :return: int or float
+    """
+    try:
+        if num_type(num) > 0:
+            item_amount = num_type(num)
+            return item_amount
+    except ValueError:
+        print(f"{Bcolors.FAIL}The amount must be a positive number!{Bcolors.ENDC}\n")
+
+
 class Basket:
+    """
+    A class implemented to imitate a store basket
+    """
 
     def __init__(self):
         self.contents = dict()
 
-    def count_total(self):
+    def count_total(self) -> float:
+        """
+        Returns the total price of the basket items
+        :return: float
+        """
         total = 0
         if self.contents:
             for k, v in self.contents.items():
@@ -15,8 +39,11 @@ class Basket:
         return total
 
     def view_basket(self):
+        """
+        Prints out the basket contents
+        :return: None
+        """
         if self.contents:
-            # print(self.contents)
             print(f"{Bcolors.OKGREEN + Bcolors.BOLD}Basket total: {self.count_total()} $\n"
                   f"Items: {Bcolors.ENDC}")
             for k, v in self.contents.items():
@@ -27,29 +54,25 @@ class Basket:
             print(f"{Bcolors.OKCYAN}The basket is currently empty\n{Bcolors.ENDC}")
 
     def add_item(self):
+        """
+        Adds item/s to the basket
+        :return: None
+        """
         item_name = input("Please provide an item name: ")
-        # print(self.contents)
-        # print(self.contents.get(item_name))
         while True:
             item_amount = input("Please provide item amount: ")
-            try:
-                if int(item_amount) > 0:
-                    item_amount = int(item_amount)
-                    break
-            except ValueError:
-                print(f"{Bcolors.FAIL}The amount must be a positive number!{Bcolors.ENDC}\n")
+            item_amount = check_if_num_positive(item_amount, int)
+            if item_amount is not None:
+                break
 
         if item_name in self.contents.keys():
             self.contents[item_name]["amount"] += item_amount
         else:
             while True:
                 item_price = input("Please provide an item price: ")
-                try:
-                    if float(item_price) > 0:
-                        item_price = float(item_price)
-                        break
-                except ValueError:
-                    print(f"{Bcolors.FAIL}The price must be a positive number!{Bcolors.ENDC}")
+                item_price = check_if_num_positive(item_price, float)
+                if item_price is not None:
+                    break
             item = Item(item_name, item_price)
             self.contents[item_name] = dict()
             self.contents[item_name]["item"] = item
@@ -57,6 +80,10 @@ class Basket:
         print(f"{Bcolors.OKGREEN}----- {item_amount} {item_name.capitalize()} added to the basket{Bcolors.ENDC}\n")
 
     def delete_item(self):
+        """
+        Deletes the item/s from the basket
+        :return: None
+        """
         item_name = input("Please provide an item name: ")
         selected_item = self.contents.get(item_name)
         if selected_item is None:
@@ -65,12 +92,9 @@ class Basket:
         else:
             while True:
                 item_amount = input("Please provide item amount: ")
-                try:
-                    if int(item_amount) > 0:
-                        item_amount = int(item_amount)
-                        break
-                except ValueError:
-                    print(f"{Bcolors.FAIL}The amount must be a positive number!{Bcolors.ENDC}\n")
+                item_amount = check_if_num_positive(item_amount, int)
+                if item_amount is not None:
+                    break
 
             deleted_items = 0
             for i in range(item_amount):
@@ -85,7 +109,6 @@ class Basket:
                         deleted_items = 1
                         self.contents.pop(item_name)
                 except KeyError:
-                    # print(f"{Bcolors.OKBLUE}No more items {item_name.capitalize()} to delete\n{Bcolors.ENDC}")
                     break
 
             print(f"{Bcolors.WARNING}{deleted_items} {item_name.capitalize()} items have been deleted.{Bcolors.ENDC}\n")

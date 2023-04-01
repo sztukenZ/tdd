@@ -62,10 +62,10 @@ class Basket:
         :return: None
         """
         if self.contents:
-            print(f"{Bcolors.OKGREEN + Bcolors.BOLD}Basket total: {self.count_total()} $\n"
+            print(f"{Bcolors.OKBLUE + Bcolors.BOLD}Basket total: {self.count_total()} $\n"
                   f"Items: {Bcolors.ENDC}")
             for k, v in self.contents.items():
-                print(f"{Bcolors.OKGREEN} - {k.capitalize()} - Unit price: {v['item'].get_price}, amount: {v['amount']}"
+                print(f"{Bcolors.OKBLUE} - {k.capitalize()} - Unit price: {v['item'].get_price}, amount: {v['amount']}"
                       f"{Bcolors.ENDC}")
             print("")
         else:

@@ -2,20 +2,15 @@ from basket import Basket
 from utils.colors import Bcolors
 
 
-def run_app():
-    """
-    Runs the app
-    :return: None
-    """
-    basket = Basket()
-    is_on = True
-    while is_on:
+def app_controller(basket: Basket):
+    while True:
         print(f"{Bcolors.HEADER}###############################{Bcolors.ENDC}")
-        print("""Add item to the basket: type a\nDelete item from the basket: type d\nQuit the program: q
-View basket: v\n""")
+        print("""
+        Add item to the basket: type a
+        Delete item from the basket: type d
+        Quit the program: q
+        View basket: v\n""")
         user_input = input("Please provide your command: ").lower()
-
-        # Controls the app by user's input
         match user_input:
             case "a":
                 basket.add_item()
@@ -24,9 +19,18 @@ View basket: v\n""")
             case "v":
                 basket.view_basket()
             case "q":
-                is_on = False
+                print("Gracefully stopping...")
+                break
+
+
+def run_app():
+    """
+    Runs the app
+    :return: None
+    """
+    basket = Basket()
+    app_controller(basket)
 
 
 if __name__ == '__main__':
     run_app()
-

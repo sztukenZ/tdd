@@ -4,6 +4,20 @@ from item import Item
 from utils.colors import Bcolors
 
 
+def check_item_name_is_number(item_name: str) -> bool:
+    """
+    Checks if the item name does not just a number
+    :param item_name: The name of the item
+    :return: bool
+    """
+    try:
+        float(item_name)
+    except ValueError:
+        return False
+    print(f"{Bcolors.WARNING}Please provide the name that is not just a number!{Bcolors.ENDC}")
+    return True
+
+
 def check_if_num_positive(num: str, num_type: Callable) -> Union[float, int]:
     """
     Checks if provided string input is a positive number
@@ -16,7 +30,11 @@ def check_if_num_positive(num: str, num_type: Callable) -> Union[float, int]:
             item_amount = num_type(num)
             return item_amount
     except ValueError:
-        print(f"{Bcolors.FAIL}The amount must be a positive number!{Bcolors.ENDC}\n")
+        # print(num_type)
+        num_type_desc = ""
+        if num_type == int:
+            num_type_desc = "whole "
+        print(f"{Bcolors.WARNING}Please provide a positive {num_type_desc}number!{Bcolors.ENDC}\n")
 
 
 class Basket:
@@ -58,7 +76,10 @@ class Basket:
         Adds item/s to the basket
         :return: None
         """
-        item_name = input("Please provide an item name: ")
+        while True:
+            item_name = input("Please provide an item name: ")
+            if not check_item_name_is_number(item_name):
+                break
         while True:
             item_amount = input("Please provide item amount: ")
             item_amount = check_if_num_positive(item_amount, int)
@@ -77,14 +98,18 @@ class Basket:
             self.contents[item_name] = dict()
             self.contents[item_name]["item"] = item
             self.contents[item_name]["amount"] = item_amount
-        print(f"{Bcolors.OKGREEN}----- {item_amount} {item_name.capitalize()} added to the basket{Bcolors.ENDC}\n")
+        print(f"{Bcolors.OKGREEN}----- {item_amount} items '{item_name.capitalize()}' added to the basket"
+              f"{Bcolors.ENDC}\n")
 
     def delete_item(self):
         """
         Deletes the item/s from the basket
         :return: None
         """
-        item_name = input("Please provide an item name: ")
+        while True:
+            item_name = input("Please provide an item name: ")
+            if not check_item_name_is_number(item_name):
+                break
         selected_item = self.contents.get(item_name)
         if selected_item is None:
             print(f"{Bcolors.FAIL} No item named {item_name.capitalize()} found in the basket. Nothing to delete."

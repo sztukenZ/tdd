@@ -1,6 +1,7 @@
 import pytest
 
 from basket import Basket, check_item_name_is_number, check_if_num_positive
+from main import run_app, app_controller
 
 
 def test_check_item_name_is_number_returns_false():
